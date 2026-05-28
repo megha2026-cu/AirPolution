@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air Quality Monitoring Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <h1>Air Quality Monitoring &amp; Pollution Trend Dashboard</h1>
+            <div class="header-meta">
+                <span id="last-updated">Last updated: —</span>
+                <span id="alert-badge" class="alert-badge hidden">&#9888; Active Alerts</span>
+            </div>
+        </div>
+    </header>
+
+    <nav class="filter-bar">
+        <label for="location-select">City</label>
+        <select id="location-select"></select>
+
+        <label for="date-from">From</label>
+        <input type="date" id="date-from">
+
+        <label for="date-to">To</label>
+        <input type="date" id="date-to">
+
+        <label for="pollutant-select">Pollutant</label>
+        <select id="pollutant-select">
+            <option value="aqi">AQI</option>
+            <option value="pm25">PM2.5</option>
+            <option value="pm10">PM10</option>
+            <option value="co">CO</option>
+            <option value="no2">NO₂</option>
+            <option value="so2">SO₂</option>
+            <option value="o3">O₃</option>
+        </select>
+
+        <button id="btn-apply" class="btn-primary">Apply</button>
+    </nav>
+
+    <main class="dashboard">
+        <!-- KPI Cards -->
+        <section class="kpi-row">
+            <div class="kpi-card" id="kpi-aqi">
+                <div class="kpi-label">Current AQI</div>
+                <div class="kpi-value">—</div>
+                <div class="kpi-category">—</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Avg AQI (period)</div>
+                <div class="kpi-value" id="kpi-avg">—</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Peak AQI (period)</div>
+                <div class="kpi-value" id="kpi-peak">—</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Safe Days</div>
+                <div class="kpi-value" id="kpi-safe">—</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Hazardous Days</div>
+                <div class="kpi-value" id="kpi-hazard">—</div>
+            </div>
+        </section>
+
+        <!-- Trend chart -->
+        <section class="chart-card wide">
+            <h2>Pollutant Concentration Trend</h2>
+            <canvas id="trend-chart" height="90"></canvas>
+        </section>
+
+        <!-- Daily summary + Hourly heatmap -->
+        <section class="chart-card">
+            <h2>Daily AQI Summary</h2>
+            <canvas id="daily-chart" height="140"></canvas>
+        </section>
+
+        <section class="chart-card">
+            <h2>Peak Pollution Hours</h2>
+            <canvas id="hourly-chart" height="140"></canvas>
+        </section>
+
+        <!-- Category donut + Forecast -->
+        <section class="chart-card">
+            <h2>AQI Category Breakdown</h2>
+            <canvas id="category-chart" height="140"></canvas>
+        </section>
+
+        <section class="chart-card">
+            <h2>7-Day AQI Forecast</h2>
+            <canvas id="forecast-chart" height="140"></canvas>
+        </section>
+
+        <!-- All-cities latest table -->
+        <section class="chart-card wide">
+            <h2>Latest Readings — All Cities</h2>
+            <div class="table-wrap">
+                <table id="cities-table">
+                    <thead>
+                        <tr>
+                            <th>City</th>
+                            <th>AQI</th>
+                            <th>Category</th>
+                            <th>PM2.5</th>
+                            <th>PM10</th>
+                            <th>Temp (°C)</th>
+                            <th>Humidity (%)</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cities-tbody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Alerts -->
+        <section class="chart-card wide" id="alerts-section">
+            <h2>Active Hazard Alerts</h2>
+            <ul id="alerts-list" class="alerts-list"></ul>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>Air Quality Monitoring Dashboard &mdash; Plag Pro, Noida &mdash; Group: UG/Dr. Vandana/7/2026/15</p>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ER Diagram – Air Quality Monitoring DB</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f4f6fa; margin: 0; padding: 20px; }
+  h1 { text-align: center; color: #2c3e50; margin-bottom: 4px; }
+  p.sub { text-align: center; color: #666; margin-bottom: 30px; font-size: 14px; }
+  svg { display: block; margin: 0 auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+  .table-header { font-weight: bold; font-size: 13px; }
+  .table-body { font-size: 11px; }
+  .pk { fill: #e74c3c; font-weight: bold; }
+  .fk { fill: #2980b9; }
+  .field { fill: #2c3e50; }
+  .legend { font-size: 11px; }
+</style>
+</head>
+<body>
+<h1>ER Diagram — Air Quality Monitoring Database</h1>
+<p class="sub">Group: UG/Dr. Vandana/7/2026/15 &nbsp;|&nbsp; Plag Pro, Noida</p>
+
+<svg width="900" height="620" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- ===== locations table ===== -->
+  <g id="locations">
+    <rect x="30" y="60" width="200" height="200" rx="8" fill="#2ecc71" opacity="0.15" stroke="#27ae60" stroke-width="2"/>
+    <rect x="30" y="60" width="200" height="32" rx="8" fill="#27ae60"/>
+    <text x="130" y="81" text-anchor="middle" fill="white" class="table-header">locations</text>
+    <!-- fields -->
+    <text x="45" y="112" class="pk">PK  id  INT UNSIGNED</text>
+    <text x="45" y="130" class="field">    city  VARCHAR(100)</text>
+    <text x="45" y="148" class="field">    state  VARCHAR(100)</text>
+    <text x="45" y="166" class="field">    country  VARCHAR(100)</text>
+    <text x="45" y="184" class="field">    latitude  DECIMAL(10,6)</text>
+    <text x="45" y="202" class="field">    longitude  DECIMAL(10,6)</text>
+    <text x="45" y="220" class="field">    created_at  TIMESTAMP</text>
+    <text x="45" y="238" class="field">    </text>
+  </g>
+
+  <!-- ===== air_quality_readings table ===== -->
+  <g id="readings">
+    <rect x="320" y="30" width="240" height="340" rx="8" fill="#3498db" opacity="0.12" stroke="#2980b9" stroke-width="2"/>
+    <rect x="320" y="30" width="240" height="32" rx="8" fill="#2980b9"/>
+    <text x="440" y="51" text-anchor="middle" fill="white" class="table-header">air_quality_readings</text>
+    <text x="335" y="83"  class="pk">PK  id  BIGINT UNSIGNED</text>
+    <text x="335" y="101" class="fk">FK  location_id  INT UNSIGNED</text>
+    <text x="335" y="119" class="field">    recorded_at  DATETIME</text>
+    <text x="335" y="137" class="field">    aqi  SMALLINT</text>
+    <text x="335" y="155" class="field">    pm25  DECIMAL(8,2) µg/m³</text>
+    <text x="335" y="173" class="field">    pm10  DECIMAL(8,2) µg/m³</text>
+    <text x="335" y="191" class="field">    co  DECIMAL(8,4) ppm</text>
+    <text x="335" y="209" class="field">    no2  DECIMAL(8,4) ppb</text>
+    <text x="335" y="227" class="field">    so2  DECIMAL(8,4) ppb</text>
+    <text x="335" y="245" class="field">    o3  DECIMAL(8,4) ppb</text>
+    <text x="335" y="263" class="field">    temperature  DECIMAL(5,2)</text>
+    <text x="335" y="281" class="field">    humidity  DECIMAL(5,2)</text>
+    <text x="335" y="299" class="field">    aqi_category  ENUM (generated)</text>
+    <text x="335" y="317" class="field">    source  VARCHAR(50)</text>
+    <text x="335" y="335" class="field">    created_at  TIMESTAMP</text>
+    <!-- indexes -->
+    <text x="335" y="355" fill="#888" font-size="10">IDX: (location_id, recorded_at), aqi</text>
+  </g>
+
+  <!-- ===== aqi_forecasts table ===== -->
+  <g id="forecasts">
+    <rect x="320" y="420" width="240" height="160" rx="8" fill="#9b59b6" opacity="0.12" stroke="#8e44ad" stroke-width="2"/>
+    <rect x="320" y="420" width="240" height="32" rx="8" fill="#8e44ad"/>
+    <text x="440" y="441" text-anchor="middle" fill="white" class="table-header">aqi_forecasts</text>
+    <text x="335" y="473" class="pk">PK  id  BIGINT UNSIGNED</text>
+    <text x="335" y="491" class="fk">FK  location_id  INT UNSIGNED</text>
+    <text x="335" y="509" class="field">    forecast_date  DATE</text>
+    <text x="335" y="527" class="field">    predicted_aqi  SMALLINT</text>
+    <text x="335" y="545" class="field">    confidence_pct  TINYINT</text>
+    <text x="335" y="563" class="field">    model_version  VARCHAR(20)</text>
+    <text x="335" y="575" fill="#888" font-size="10">UNIQUE: (location_id, forecast_date)</text>
+  </g>
+
+  <!-- ===== alerts table ===== -->
+  <g id="alerts">
+    <rect x="650" y="200" width="220" height="200" rx="8" fill="#e74c3c" opacity="0.12" stroke="#c0392b" stroke-width="2"/>
+    <rect x="650" y="200" width="220" height="32" rx="8" fill="#c0392b"/>
+    <text x="760" y="221" text-anchor="middle" fill="white" class="table-header">alerts</text>
+    <text x="665" y="253" class="pk">PK  id  INT UNSIGNED</text>
+    <text x="665" y="271" class="fk">FK  location_id  INT UNSIGNED</text>
+    <text x="665" y="289" class="field">    triggered_at  DATETIME</text>
+    <text x="665" y="307" class="field">    aqi_threshold  SMALLINT</text>
+    <text x="665" y="325" class="field">    actual_aqi  SMALLINT</text>
+    <text x="665" y="343" class="field">    message  VARCHAR(255)</text>
+    <text x="665" y="361" class="field">    resolved_at  DATETIME</text>
+    <text x="665" y="390" fill="#888" font-size="10">IDX: (location_id, triggered_at)</text>
+  </g>
+
+  <!-- ===== Relationship lines ===== -->
+  <!-- locations → air_quality_readings (1 to many) -->
+  <line x1="230" y1="150" x2="320" y2="150" stroke="#27ae60" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="255" y="144" font-size="10" fill="#27ae60">1</text>
+  <text x="295" y="144" font-size="10" fill="#27ae60">N</text>
+  <polygon points="316,146 316,154 322,150" fill="#27ae60"/>
+
+  <!-- locations → aqi_forecasts (1 to many) -->
+  <path d="M130,260 Q130,500 320,490" fill="none" stroke="#8e44ad" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="135" y="360" font-size="10" fill="#8e44ad">1</text>
+  <text x="295" y="487" font-size="10" fill="#8e44ad">N</text>
+  <polygon points="316,486 316,494 322,490" fill="#8e44ad"/>
+
+  <!-- locations → alerts (1 to many) -->
+  <path d="M230,120 Q560,80 650,280" fill="none" stroke="#c0392b" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="240" y="115" font-size="10" fill="#c0392b">1</text>
+  <text x="638" y="278" font-size="10" fill="#c0392b">N</text>
+  <polygon points="646,276 652,282 658,276" fill="#c0392b"/>
+
+  <!-- ===== Legend ===== -->
+  <rect x="30" y="530" width="260" height="80" rx="6" fill="#fff" stroke="#ccc" stroke-width="1"/>
+  <text x="45" y="550" font-size="12" font-weight="bold" fill="#2c3e50">Legend</text>
+  <rect x="45" y="558" width="12" height="12" fill="#e74c3c"/>
+  <text x="62" y="569" class="legend" fill="#2c3e50">PK — Primary Key</text>
+  <rect x="45" y="576" width="12" height="12" fill="#2980b9"/>
+  <text x="62" y="587" class="legend" fill="#2c3e50">FK — Foreign Key (references locations.id)</text>
+  <line x1="45" y1="600" x2="75" y2="600" stroke="#555" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="80" y="604" class="legend" fill="#2c3e50">One-to-Many relationship</text>
+
+</svg>
+
+<p style="text-align:center;color:#888;font-size:12px;margin-top:16px;">
+  Generated for: Air Quality Monitoring &amp; Pollution Trend Visualization Dashboard &nbsp;|&nbsp; 2026
+</p>
+</body>
+</html>

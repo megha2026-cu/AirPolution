@@ -1,0 +1,7 @@
+node_modules/
+backend/.env
+*.env
+*.log
+data/sample/*.csv
+.DS_Store
+CLAUDE.md
