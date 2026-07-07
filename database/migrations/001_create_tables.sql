@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS locations (
     country VARCHAR(100) NOT NULL DEFAULT 'India',
     latitude DECIMAL(10,6),
     longitude DECIMAL(10,6),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_city_state (city, state)
 );
 
 -- Pollutant readings (time-series data)
@@ -73,7 +74,7 @@ CREATE TABLE IF NOT EXISTS alerts (
     INDEX idx_alert_location_time (location_id, triggered_at)
 );
 
--- Sample locations (Indian cities)
+-- Sample locations (major Indian cities)
 INSERT IGNORE INTO locations (city, state, country, latitude, longitude) VALUES
 ('Delhi', 'Delhi', 'India', 28.6139, 77.2090),
 ('Mumbai', 'Maharashtra', 'India', 19.0760, 72.8777),
@@ -84,4 +85,19 @@ INSERT IGNORE INTO locations (city, state, country, latitude, longitude) VALUES
 ('Noida', 'Uttar Pradesh', 'India', 28.5355, 77.3910),
 ('Gurugram', 'Haryana', 'India', 28.4595, 77.0266),
 ('Pune', 'Maharashtra', 'India', 18.5204, 73.8567),
-('Ahmedabad', 'Gujarat', 'India', 23.0225, 72.5714);
+('Ahmedabad', 'Gujarat', 'India', 23.0225, 72.5714),
+('Jaipur', 'Rajasthan', 'India', 26.9124, 75.7873),
+('Lucknow', 'Uttar Pradesh', 'India', 26.8467, 80.9462),
+('Patna', 'Bihar', 'India', 25.5941, 85.1376),
+('Bhopal', 'Madhya Pradesh', 'India', 23.2599, 77.4126),
+('Chandigarh', 'Chandigarh', 'India', 30.7333, 76.7794),
+('Kanpur', 'Uttar Pradesh', 'India', 26.4499, 80.3319),
+('Raipur', 'Chhattisgarh', 'India', 21.2514, 81.6296),
+('Guwahati', 'Assam', 'India', 26.1445, 91.7362),
+('Bhubaneswar', 'Odisha', 'India', 20.2961, 85.8245),
+('Thiruvananthapuram', 'Kerala', 'India', 8.5241, 76.9366),
+('Amritsar', 'Punjab', 'India', 31.6340, 74.8723),
+('Dehradun', 'Uttarakhand', 'India', 30.3165, 78.0322),
+('Ranchi', 'Jharkhand', 'India', 23.3441, 85.3096),
+('Shimla', 'Himachal Pradesh', 'India', 31.1048, 77.1734),
+('Panaji', 'Goa', 'India', 15.4909, 73.8278);

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     if (Auth.isLoggedIn()) {
-        window.location.href = 'index.html';
+        window.location.href = '/';
         return;
     }
 
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             Auth.setToken(data.token);
-            window.location.href = 'index.html';
+            window.location.href = '/';
         } catch (err) {
             errorEl.textContent = err.message || 'Login failed. Please try again.';
             errorEl.classList.remove('hidden');

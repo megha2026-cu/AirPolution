@@ -22,28 +22,52 @@ const pool = mysql.createPool({
         : undefined
 });
 
-// Realistic AQI baselines per city
+// Realistic AQI baselines per city, keyed by city name (matches locations.city)
 const CITY_PROFILES = [
-    { id: 1, base_aqi: 250, variance: 80  }, // Delhi — very poor
-    { id: 2, base_aqi: 120, variance: 50  }, // Mumbai
-    { id: 3, base_aqi:  80, variance: 30  }, // Bengaluru
-    { id: 4, base_aqi: 160, variance: 60  }, // Kolkata
-    { id: 5, base_aqi:  90, variance: 35  }, // Chennai
-    { id: 6, base_aqi: 110, variance: 45  }, // Hyderabad
-    { id: 7, base_aqi: 220, variance: 70  }, // Noida
-    { id: 8, base_aqi: 200, variance: 75  }, // Gurugram
-    { id: 9, base_aqi:  95, variance: 40  }, // Pune
-    { id:10, base_aqi: 130, variance: 55  }  // Ahmedabad
+    { city: 'Delhi',               base_aqi: 250, variance: 80 }, // very poor
+    { city: 'Mumbai',              base_aqi: 120, variance: 50 },
+    { city: 'Bengaluru',           base_aqi:  80, variance: 30 },
+    { city: 'Kolkata',             base_aqi: 160, variance: 60 },
+    { city: 'Chennai',             base_aqi:  90, variance: 35 },
+    { city: 'Hyderabad',           base_aqi: 110, variance: 45 },
+    { city: 'Noida',               base_aqi: 220, variance: 70 },
+    { city: 'Gurugram',            base_aqi: 200, variance: 75 },
+    { city: 'Pune',                base_aqi:  95, variance: 40 },
+    { city: 'Ahmedabad',           base_aqi: 130, variance: 55 },
+    { city: 'Jaipur',              base_aqi: 170, variance: 60 },
+    { city: 'Lucknow',             base_aqi: 230, variance: 75 },
+    { city: 'Patna',               base_aqi: 240, variance: 80 },
+    { city: 'Bhopal',              base_aqi: 140, variance: 50 },
+    { city: 'Chandigarh',          base_aqi: 150, variance: 55 },
+    { city: 'Kanpur',              base_aqi: 260, variance: 85 }, // very poor
+    { city: 'Raipur',              base_aqi: 180, variance: 60 },
+    { city: 'Guwahati',            base_aqi: 150, variance: 55 },
+    { city: 'Bhubaneswar',         base_aqi: 120, variance: 45 },
+    { city: 'Thiruvananthapuram',  base_aqi:  60, variance: 25 }, // good/satisfactory
+    { city: 'Amritsar',            base_aqi: 190, variance: 65 },
+    { city: 'Dehradun',            base_aqi: 100, variance: 40 },
+    { city: 'Ranchi',              base_aqi: 160, variance: 55 },
+    { city: 'Shimla',              base_aqi:  55, variance: 20 }, // hill station, cleaner air
+    { city: 'Panaji',              base_aqi:  70, variance: 25 }
 ];
 
 function rand(min, max) { return +(Math.random() * (max - min) + min).toFixed(2); }
 function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
 
 async function seed() {
+    const [locationRows] = await pool.query('SELECT id, city FROM locations');
+    const cityIdByName = new Map(locationRows.map(r => [r.city, r.id]));
+
     const rows = [];
     const now  = new Date();
 
-    for (const city of CITY_PROFILES) {
+    for (const profile of CITY_PROFILES) {
+        const locationId = cityIdByName.get(profile.city);
+        if (!locationId) {
+            console.warn(`Skipping "${profile.city}" — no matching row in locations table`);
+            continue;
+        }
+        const city = { id: locationId, base_aqi: profile.base_aqi, variance: profile.variance };
         for (let dayOffset = 30; dayOffset >= 0; dayOffset--) {
             // 4 readings per day (00:00, 06:00, 12:00, 18:00)
             for (const hour of [0, 6, 12, 18]) {

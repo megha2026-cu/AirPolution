@@ -6,6 +6,12 @@ const btnApply       = document.getElementById('btn-apply');
 
 document.getElementById('btn-logout').addEventListener('click', Auth.logout);
 
+(function showLastLogin() {
+    const loginTime = Auth.getLoginTime();
+    document.getElementById('last-login').textContent =
+        'Last login: ' + (loginTime ? loginTime.toLocaleString() : '—');
+})();
+
 // Default date range: last 7 days
 (function setDefaultDates() {
     const to   = new Date();
