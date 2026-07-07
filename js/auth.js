@@ -31,3 +31,10 @@ const Auth = {
         }
     }
 };
+
+// Pages that need the redirect to happen before first paint (to avoid a
+// flash of protected content) load this script in <head> with
+// data-guard="true" instead of calling Auth.requireLogin() separately.
+if (document.currentScript && document.currentScript.dataset.guard === 'true') {
+    Auth.requireLogin();
+}

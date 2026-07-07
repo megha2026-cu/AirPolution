@@ -1,5 +1,3 @@
-Auth.requireLogin();
-
 const locationSelect = document.getElementById('location-select');
 const dateFrom       = document.getElementById('date-from');
 const dateTo         = document.getElementById('date-to');
