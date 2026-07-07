@@ -1,8 +1,12 @@
+Auth.requireLogin();
+
 const locationSelect = document.getElementById('location-select');
 const dateFrom       = document.getElementById('date-from');
 const dateTo         = document.getElementById('date-to');
 const pollutantSelect= document.getElementById('pollutant-select');
 const btnApply       = document.getElementById('btn-apply');
+
+document.getElementById('btn-logout').addEventListener('click', Auth.logout);
 
 // Default date range: last 7 days
 (function setDefaultDates() {

@@ -4,6 +4,7 @@
  * for hazard alert detection and 7-day AQI forecast regeneration.
  */
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -19,11 +20,27 @@ const { pool } = require('./config/db');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", 'https://cdn.jsdelivr.net'],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            imgSrc: ["'self'", 'data:'],
+            connectSrc: ["'self'"]
+        }
+    }
+}));
 app.use(cors({ origin: process.env.ALLOWED_ORIGIN || '*' }));
 app.use(express.json({ limit: '1mb' }));
 app.use('/api', rateLimiter);
 app.use('/api', apiRouter);
+
+const projectRoot = path.join(__dirname, '..');
+app.use('/css', express.static(path.join(projectRoot, 'css')));
+app.use('/js', express.static(path.join(projectRoot, 'js')));
+app.get('/', (req, res) => res.sendFile(path.join(projectRoot, 'index.html')));
+app.get('/login.html', (req, res) => res.sendFile(path.join(projectRoot, 'login.html')));
 
 // Scheduled: check for hazard alerts every 30 minutes
 cron.schedule('*/30 * * * *', () => {
