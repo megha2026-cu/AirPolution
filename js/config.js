@@ -1,5 +1,6 @@
-// Change this to your backend URL when deployed
-const API_BASE = 'http://10.10.10.145:3000/api';
+// Same-origin: the Express backend serves this frontend, so relative paths work
+// both locally (http://localhost:3000) and on the deployed Render URL.
+const API_BASE = '/api';
 
 const AQI_COLORS = {
     Good:         '#00b050',
