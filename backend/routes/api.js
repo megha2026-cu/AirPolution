@@ -17,26 +17,32 @@ const {
 } = require('../controllers/readingsController');
 const { getAlerts } = require('../controllers/alertController');
 const { getForecast } = require('../controllers/forecastController');
+const { login } = require('../controllers/authController');
 
-const { validateQuery, validateBody, readingsQuerySchema, locationSchema } = require('../middleware/validate');
+const { validateQuery, validateBody, readingsQuerySchema, locationSchema, loginSchema } = require('../middleware/validate');
+const { requireAuth } = require('../middleware/auth');
+const { loginLimiter } = require('../middleware/rateLimiter');
+
+// Auth
+router.post('/login', loginLimiter, validateBody(loginSchema), login);
 
 // Locations
-router.get('/locations', getAllLocations);
-router.post('/locations', validateBody(locationSchema), createLocation);
+router.get('/locations', requireAuth, getAllLocations);
+router.post('/locations', requireAuth, validateBody(locationSchema), createLocation);
 
 // Readings
-router.get('/readings', validateQuery(readingsQuerySchema), getReadings);
-router.get('/readings/latest', getLatestReading);
-router.get('/readings/hourly', validateQuery(readingsQuerySchema), getHourlyAverage);
-router.get('/readings/daily', validateQuery(readingsQuerySchema), getDailySummary);
-router.get('/readings/peak-hours', validateQuery(readingsQuerySchema), getPeakPollutionHours);
-router.get('/readings/category-breakdown', validateQuery(readingsQuerySchema), getCategoryBreakdown);
+router.get('/readings', requireAuth, validateQuery(readingsQuerySchema), getReadings);
+router.get('/readings/latest', requireAuth, getLatestReading);
+router.get('/readings/hourly', requireAuth, validateQuery(readingsQuerySchema), getHourlyAverage);
+router.get('/readings/daily', requireAuth, validateQuery(readingsQuerySchema), getDailySummary);
+router.get('/readings/peak-hours', requireAuth, validateQuery(readingsQuerySchema), getPeakPollutionHours);
+router.get('/readings/category-breakdown', requireAuth, validateQuery(readingsQuerySchema), getCategoryBreakdown);
 
 // Alerts
-router.get('/alerts', getAlerts);
+router.get('/alerts', requireAuth, getAlerts);
 
 // Forecast
-router.get('/forecast', getForecast);
+router.get('/forecast', requireAuth, getForecast);
 
 // Health check
 router.get('/health', (req, res) => res.json({ status: 'ok', ts: new Date().toISOString() }));

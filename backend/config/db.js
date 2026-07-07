@@ -4,7 +4,11 @@
  * All controllers import { pool } from here — never create ad-hoc connections.
  */
 const mysql = require('mysql2/promise');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
+
+const caPath = path.join(__dirname, '..', 'certs', 'aiven-ca.pem');
 
 const pool = mysql.createPool({
     host: process.env.DB_HOST || 'localhost',
@@ -15,7 +19,10 @@ const pool = mysql.createPool({
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
-    timezone: '+05:30'
+    timezone: '+05:30',
+    ssl: process.env.DB_SSL === 'true'
+        ? { ca: fs.readFileSync(caPath, 'utf8'), rejectUnauthorized: true }
+        : undefined
 });
 
 async function testConnection() {

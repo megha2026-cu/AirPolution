@@ -51,6 +51,17 @@ body {
 .alert-badge.hidden { display: none; }
 @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.55; } }
 
+.btn-logout {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,.35);
+    color: #fff;
+    border-radius: 6px;
+    padding: .3rem .8rem;
+    font-size: .78rem;
+    cursor: pointer;
+}
+.btn-logout:hover { background: rgba(255,255,255,.1); }
+
 /* ===== Filter bar ===== */
 .filter-bar {
     background: var(--surface);

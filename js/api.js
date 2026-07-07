@@ -1,5 +1,12 @@
 async function apiFetch(path) {
-    const res = await fetch(API_BASE + path);
+    const res = await fetch(API_BASE + path, {
+        headers: { 'Authorization': 'Bearer ' + Auth.getToken() }
+    });
+
+    if (res.status === 401) {
+        Auth.logout();
+        throw new Error('Session expired, please sign in again');
+    }
     if (!res.ok) throw new Error(`API error ${res.status}: ${path}`);
     return res.json();
 }

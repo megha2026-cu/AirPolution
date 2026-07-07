@@ -3,8 +3,12 @@
  * Usage: node data/seed_sample_data.js
  * Requires DB env vars — copy .env.example to .env first.
  */
-require('dotenv').config({ path: '../backend/.env' });
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', 'backend', '.env') });
 const mysql = require('mysql2/promise');
+const fs = require('fs');
+
+const caPath = path.join(__dirname, '..', 'backend', 'certs', 'aiven-ca.pem');
 
 const pool = mysql.createPool({
     host:     process.env.DB_HOST || 'localhost',
@@ -12,7 +16,10 @@ const pool = mysql.createPool({
     database: process.env.DB_NAME || 'air_quality_db',
     user:     process.env.DB_USER,
     password: process.env.DB_PASS,
-    connectionLimit: 5
+    connectionLimit: 5,
+    ssl: process.env.DB_SSL === 'true'
+        ? { ca: fs.readFileSync(caPath, 'utf8'), rejectUnauthorized: true }
+        : undefined
 });
 
 // Realistic AQI baselines per city

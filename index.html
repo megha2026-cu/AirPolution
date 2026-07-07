@@ -14,6 +14,7 @@
             <div class="header-meta">
                 <span id="last-updated">Last updated: —</span>
                 <span id="alert-badge" class="alert-badge hidden">&#9888; Active Alerts</span>
+                <button id="btn-logout" class="btn-logout" type="button">Log out</button>
             </div>
         </div>
     </header>
@@ -130,8 +131,13 @@
     </footer>
 
     <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script>Auth.requireLogin();</script>
     <script src="js/api.js"></script>
     <script src="js/charts.js"></script>
     <script src="js/dashboard.js"></script>
+    <script>
+        document.getElementById('btn-logout').addEventListener('click', Auth.logout);
+    </script>
 </body>
 </html>

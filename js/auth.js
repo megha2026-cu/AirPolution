@@ -1,0 +1,33 @@
+// Auth token is kept in sessionStorage (cleared when the tab closes) rather than
+// localStorage, to limit how long a stolen token via XSS would remain usable.
+const Auth = {
+    TOKEN_KEY: 'aq_token',
+
+    getToken: function () {
+        return sessionStorage.getItem(Auth.TOKEN_KEY);
+    },
+
+    setToken: function (token) {
+        sessionStorage.setItem(Auth.TOKEN_KEY, token);
+    },
+
+    clear: function () {
+        sessionStorage.removeItem(Auth.TOKEN_KEY);
+    },
+
+    isLoggedIn: function () {
+        return !!Auth.getToken();
+    },
+
+    logout: function () {
+        Auth.clear();
+        window.location.href = 'login.html';
+    },
+
+    // Call at the top of any page that requires a logged-in session.
+    requireLogin: function () {
+        if (!Auth.isLoggedIn()) {
+            window.location.href = 'login.html';
+        }
+    }
+};

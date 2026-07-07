@@ -20,6 +20,11 @@ const locationSchema = Joi.object({
     longitude: Joi.number().min(-180).max(180).optional()
 });
 
+const loginSchema = Joi.object({
+    username: Joi.string().max(100).required(),
+    password: Joi.string().max(200).required()
+});
+
 function validateQuery(schema) {
     return (req, res, next) => {
         const { error, value } = schema.validate(req.query);
@@ -38,4 +43,4 @@ function validateBody(schema) {
     };
 }
 
-module.exports = { readingsQuerySchema, locationSchema, validateQuery, validateBody };
+module.exports = { readingsQuerySchema, locationSchema, loginSchema, validateQuery, validateBody };
